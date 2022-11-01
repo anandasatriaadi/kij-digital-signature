@@ -5,6 +5,18 @@ from hashlib import sha512
 PRIVATE_KEY = 'private.pem'
 PUBLIC_KEY = 'public.pem'
 
+# Generate Private & Public Keys
+def generate_keys():
+    key = RSA.generate(1024)
+    private_key = key.exportKey()
+    public_key = key.publickey().exportKey()
+
+    with open(PRIVATE_KEY, 'wb') as f:
+        f.write(private_key)
+
+    with open(PUBLIC_KEY, 'wb') as f:
+        f.write(public_key)
+
 # Sign file
 def sign_file(filename):
     with open(filename, 'rb') as f:
@@ -80,13 +92,19 @@ def verify_file(filename):
                 return False
 
 if __name__ == '__main__':
+    # Check for keys availability
+    if(not os.path.exists(PRIVATE_KEY) or not os.path.exists(PUBLIC_KEY)):
+        print("[!] Generating keys...")
+        generate_keys()
+        print("[!] Keys generated!")
+
     # ls
     print("[+] Files in current directory:")
     for file in os.listdir():
         print(f"\t> {file}")
 
     # Read Input File
-    filename = input("Enter file name: ")
+    filename = input("[>] Enter file name: ")
 
     # Sign file
     sign_file(filename)
