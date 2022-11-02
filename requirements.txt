@@ -1,0 +1,3 @@
+pycryptodome
+regex
+PyPDF2
